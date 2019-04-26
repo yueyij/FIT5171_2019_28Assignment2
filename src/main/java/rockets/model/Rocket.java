@@ -34,7 +34,11 @@ public class Rocket extends Entity {
         notNull(country);
         notNull(manufacturer);
         this.name = name;
-        this.manufacturer = manufacturer;
+        manufacturerList = FileManager.readManufacturerInfo("src/main/java/manufacturers.txt");
+        if (isManufacturerValid(manufacturer) == true)
+            this.manufacturer = manufacturer;
+        else
+            throw new IllegalArgumentException("manufacturer should be valid");
         if (isCountryValid(country) == true )
             this.country = country;
         else
@@ -75,10 +79,10 @@ public class Rocket extends Entity {
 
     public void setManufacturer(LaunchServiceProvider manufacturer)
     {
-        if (manufacturer == null)
-        { throw new NullPointerException("Manufacturer cannot be null");}
-        else
+        if (manufacturer != null && isManufacturerValid(manufacturer) == true)
             this.manufacturer = manufacturer;
+        else
+            throw new NullPointerException("Manufacturer is not valid");
     }
 
     public String getMassToLEO() { return massToLEO; }
@@ -109,13 +113,26 @@ public class Rocket extends Entity {
 
     public void setManufacturerList(ArrayList<LaunchServiceProvider> manufacturerList){
 
-        if (manufacturerList.size()==0)
+        if (manufacturerList.size() ==0 )
             throw new NullPointerException("Manufacturer List cannot be null");
         else
         {
             this.manufacturerList = manufacturerList;
-
         }
+    }
+
+    public boolean isManufacturerValid(LaunchServiceProvider manufacturer)
+    {
+        if (manufacturerList.isEmpty())
+            throw new NullPointerException("Manufacturer List cannot be null");
+        for (LaunchServiceProvider aManufacturer: manufacturerList)
+        {
+            if (aManufacturer.getName().equals(manufacturer.getName()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isCountryValid(String country){

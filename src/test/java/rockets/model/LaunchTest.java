@@ -74,6 +74,7 @@ class LaunchTest {
     @Test
     public void shouldNotThrowExceptionWhenSetValidLaunchVehicle() {
         LaunchServiceProvider launchServiceProvider = new LaunchServiceProvider("JessieLaunch",2000,"AU");
+
         Rocket rocket = new Rocket("Alpha","US",launchServiceProvider);
         launch.setLaunchVehicle(rocket);
         assertEquals(launch.getLaunchVehicle(),rocket);

@@ -16,7 +16,6 @@ public class RocketTest {
 
     @BeforeEach
     public void setUp() {
-
         LaunchServiceProvider launchServiceProvider = new LaunchServiceProvider("JessieLaunch",2000,"AU");
         rocket = new Rocket("name","AU", launchServiceProvider);
     }
@@ -59,6 +58,14 @@ public class RocketTest {
         assertEquals("The validated object is null", exception.getMessage());
     }
 
+    @DisplayName("should throw exception when pass invalid value to constructor")
+    @Test
+    public void shouldThrowExceptionWhenPassNonExistManufacturerToRocketConstructor() {
+        LaunchServiceProvider manufacturer  = new LaunchServiceProvider("LouisLaunch",2000,"AU");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Rocket("Alpha","AU", manufacturer));
+        assertEquals("manufacturer should be valid", exception.getMessage());
+    }
+
 
     @DisplayName("should not throw exception when pass valid name to setName function")
     @Test
@@ -90,7 +97,7 @@ public class RocketTest {
     @Test
     public void shouldThrowExceptionWhenSetManufacturerToNull() {
         NullPointerException exception = assertThrows(NullPointerException.class, () -> rocket.setManufacturer(null));
-        assertEquals("Manufacturer cannot be null", exception.getMessage());
+        assertEquals("Manufacturer is not valid", exception.getMessage());
     }
 
     @DisplayName("should not throw exception when pass valid manufacturer to setManufacturer function")
