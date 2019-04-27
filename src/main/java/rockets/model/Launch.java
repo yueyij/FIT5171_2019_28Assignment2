@@ -33,6 +33,23 @@ public class Launch extends Entity {
 
     private LaunchOutcome launchOutcome;
 
+    public Launch(LocalDate launchDate,Rocket launchVehicle,LaunchServiceProvider launchServiceProvider, Set<String> payload,
+                  String launchSite,String orbit, String function,BigDecimal price,LaunchOutcome launchOutcome)
+    {
+        this.launchDate=launchDate;
+        this.launchVehicle=launchVehicle;
+        this.launchServiceProvider=launchServiceProvider;
+        this.payload=payload;
+        this.launchSite=launchSite;
+        this.orbit=orbit;
+        this.function=function;
+        this.price=price;
+        this.launchOutcome=launchOutcome;
+    }
+
+    public Launch()
+    {}
+
 
     public LocalDate getLaunchDate() {
         return launchDate;

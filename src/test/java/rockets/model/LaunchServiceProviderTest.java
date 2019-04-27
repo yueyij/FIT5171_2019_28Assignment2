@@ -116,7 +116,7 @@ class LaunchServiceProviderTest {
     @DisplayName("should throw exception when pass a empty country to setCountry function")
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "  "})
-    public void shouldThrowExceptionWhenSetCountry(String country) {
+    public void shouldThrowExceptionWhenSetEmptyCountry(String country) {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setCountry(country));
         assertEquals("country cannot be null or empty", exception.getMessage());
     }
@@ -131,7 +131,7 @@ class LaunchServiceProviderTest {
     @DisplayName("should return true when country is valid")
     @Test
     public void shouldReturnTrueWhenCountryIsValid() {
-        String country = "CN";
+        String country = "US";
         assertTrue(target.isValidCountry(country));
     }
 

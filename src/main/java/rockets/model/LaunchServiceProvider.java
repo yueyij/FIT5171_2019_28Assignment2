@@ -22,7 +22,7 @@ public class LaunchServiceProvider extends Entity {
         notNull(name);
         notNull(yearFounded);
         notNull(country);
-     if (isValidName(name)==true && isValidYearFounded(yearFounded)==true && isValidCountry(country)) {
+     if (isValidName(name) && isValidYearFounded(yearFounded) && isValidCountry(country)) {
          this.name = name;
          this.yearFounded = yearFounded;
          this.country = country;
@@ -52,7 +52,7 @@ public class LaunchServiceProvider extends Entity {
 
     public void setName(String name) {
         notBlank(name, "The launch service provider name cannot be null or empty");
-        if (isValidName(name) == false)
+        if (!isValidName(name))
             throw new IllegalArgumentException("The launch service provider name should only contain letters and number");
         else
             this.name = name;
@@ -60,7 +60,7 @@ public class LaunchServiceProvider extends Entity {
 
     public void setYearFounded(int year) {
         notNaN(year,"year cannot be null or empty");
-        if (isValidYearFounded(year) == true)
+        if (isValidYearFounded(year))
             this.yearFounded = year;
         else
             throw new IllegalArgumentException("year should be between 1800 and 2019.");
@@ -68,7 +68,7 @@ public class LaunchServiceProvider extends Entity {
 
     public void setCountry(String country) {
         notBlank(country, "country cannot be null or empty");
-        if (isValidCountry(country) == true)
+        if (isValidCountry(country))
             this.country = country;
         else
             throw new IllegalArgumentException("Please enter valid country.");
@@ -76,7 +76,7 @@ public class LaunchServiceProvider extends Entity {
 
     public void setHeadquarters(String headquarters) {
         notBlank(headquarters, "headquarters cannot be null or empty");
-        if (isValidHeadquarters(headquarters) == true)
+        if (isValidHeadquarters(headquarters))
             this.headquarters = headquarters;
         else
             throw new IllegalArgumentException("Headquarters should only contain letters.");
@@ -105,7 +105,8 @@ public class LaunchServiceProvider extends Entity {
     public boolean isValidCountry(String country)
     {
         Set<String> isoCountries = new HashSet<String>(Arrays.asList(Locale.getISOCountries()));
-        return isoCountries.contains(country);
+        return isoCountries.contains(country
+        );
     }
 
     public boolean isValidHeadquarters(String headquarters)
