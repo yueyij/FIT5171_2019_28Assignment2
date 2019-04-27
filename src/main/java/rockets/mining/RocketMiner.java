@@ -32,21 +32,20 @@ public class RocketMiner {
 
         logger.info("find most active " + k + " rockets");
         Collection<Launch> launches = dao.loadAll(Launch.class);
-
+        if (k > launches.size())
+            throw new IllegalArgumentException("k should less than the total number of launches");
         List<Rocket> rocketList = new ArrayList<>();
-        // A HashMap saves rocket objects and it's number of launches
+        // Create a hashMap with rocket and it's number of launches
         HashMap<Rocket,Long> map = new HashMap<>();
-
         for (Launch launch: launches)
         {
             map.put(launch.getLaunchVehicle(),launches.stream().filter((s) -> s.equals(launch.getLaunchVehicle().getName())).count());
         }
-        Comparator<Entry<Rocket,Long>> rocketNumberComparator = (a, b) -> -a.getValue().compareTo(b.getValue());
-
+        System.out.println(map);
         // Ordered HashMap with K elements by the number of launches
+        Comparator<Entry<Rocket,Long>> rocketNumberComparator = (a, b) -> -a.getValue().compareTo(b.getValue());
         HashMap<Rocket,Long> sorted = map.entrySet().stream().sorted(rocketNumberComparator).limit(k)
                 .collect(Collectors.toMap(e -> e.getKey(),e -> e.getValue(), (e1,e2) -> e2, LinkedHashMap::new));
-
         //add k elements in rocketsList
         for (Entry<Rocket,Long> en : sorted.entrySet())
         {
@@ -68,6 +67,8 @@ public class RocketMiner {
     {
         logger.info("find most reliable " + k + " launch service providers");
         Collection<Launch> launches = dao.loadAll(Launch.class);
+        if (k > launches.size())
+            throw new IllegalArgumentException("k should less than the total number of launches");
         // find all the providers
         List<LaunchServiceProvider> allProviders = new ArrayList<>();
         for (Launch launch: launches)
@@ -121,6 +122,8 @@ public class RocketMiner {
     public List<Launch> mostRecentLaunches(int k) {
         logger.info("find most recent " + k + " launches");
         Collection<Launch> launches = dao.loadAll(Launch.class);
+        if (k > launches.size())
+            throw new IllegalArgumentException("k should less than the total number of launches");
         Comparator<Launch> launchDateComparator = (a, b) -> -a.getLaunchDate().compareTo(b.getLaunchDate());
         return launches.stream().sorted(launchDateComparator).limit(k).collect(Collectors.toList());
     }
@@ -131,15 +134,45 @@ public class RocketMiner {
      * Returns the dominant country who has the most launched rockets in an orbit.
      *
      * @param orbit the orbit
-     * @return the country who sends the most payload to the orbit
+     * @return the country who has the most launched rockets in an orbit.
      */
     public String dominantCountry(String orbit)
     {
         logger.info("find the dominant country who has the most launched rockets in the orbit " + orbit );
         Collection<Launch> launches = dao.loadAll(Launch.class);
-        List<Rocket> rockets = new ArrayList<Rocket>();
-        rockets = mostLaunchedRockets(1);
-        String country = rockets.get(0).getManufacturer().getCountry();
+        // find all the rockets in the specific orbit
+        List<Rocket> allRockets = new ArrayList<>();
+        for (Launch launch: launches)
+        {
+            if (launch.getOrbit().equals(orbit))
+            {
+                Rocket rocket = launch.getLaunchVehicle();
+                allRockets.add(rocket);
+            }
+        }
+        if (allRockets.isEmpty())
+            throw new IllegalArgumentException("There is no rocket in this orbit");
+        List<Rocket> distinctRockets = allRockets.stream().distinct().collect(Collectors.toList());
+        // Create a hashMap with distinctRockets and it's number of launches
+        HashMap<Rocket,Integer> map = new HashMap<>();
+        for (Rocket rocket: distinctRockets)
+        {
+            int number = 0;
+            for (Launch launch: launches)
+            {
+                if (rocket.getName() == launch.getLaunchVehicle().getName())
+                {
+                    number++;
+                }
+            }
+            map.put(rocket,number);
+        }
+        // Sort HashMap by the number of launches
+        Comparator<Entry<Rocket,Integer>> numberComparator = (a, b) -> -a.getValue().compareTo(b.getValue());
+        HashMap<Rocket,Integer> sorted = map.entrySet().stream().sorted(numberComparator).limit(1)
+                .collect(Collectors.toMap(e -> e.getKey(),e -> e.getValue(), (e1,e2) -> e2, LinkedHashMap::new));
+        Map.Entry<Rocket,Integer> entry = sorted.entrySet().iterator().next();
+        String country = entry.getKey().getCountry();
         return country;
     }
 
@@ -154,6 +187,8 @@ public class RocketMiner {
     public List<Launch> mostExpensiveLaunches(int k) {
         logger.info("find most expensive " + k + " launches");
         Collection<Launch> launches = dao.loadAll(Launch.class);
+        if (k > launches.size())
+            throw new IllegalArgumentException("k should less than the total number of launches");
         Comparator<Launch> launchDateComparator = (a, b) -> -a.getPrice().compareTo(b.getPrice());
         return launches.stream().sorted(launchDateComparator).limit(k).collect(Collectors.toList());
     }
@@ -171,6 +206,8 @@ public class RocketMiner {
     public List<LaunchServiceProvider> highestRevenueLaunchServiceProviders(int k, int year) {
         logger.info("find most highest sales revenue " + k + " launch service providers in " + year);
         Collection<Launch> launches = dao.loadAll(Launch.class);
+        if (k > launches.size())
+            throw new IllegalArgumentException("k should less than the total number of launches");
         // find all the providers in a specific year
         List<LaunchServiceProvider> allProviders = new ArrayList<>();
         for (Launch launch: launches)
@@ -181,6 +218,8 @@ public class RocketMiner {
                 allProviders.add(provider);
             }
         }
+        if (allProviders.isEmpty())
+            throw new IllegalArgumentException("There is no launch in this year");
         List<LaunchServiceProvider> distinctProviders = allProviders.stream().distinct().collect(Collectors.toList());
         //create hashMap of provider and it's revenue and add value in it
         HashMap<LaunchServiceProvider,BigDecimal> map = new HashMap<>();

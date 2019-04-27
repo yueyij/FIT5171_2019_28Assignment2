@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class RocketMinerUnitTest {
@@ -96,6 +97,15 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
+    @ValueSource(ints = {12})
+    public void shouldThrowExceptionWhenKIsLargerThanTheLaunchesInMostRecentLaunches(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostRecentLaunches(k));
+        assertEquals("k should less than the total number of launches", exception.getMessage());
+    }
+
+    @ParameterizedTest
     @ValueSource(ints = {1, 2, 3})
     public void shouldReturnTopMostExpensiveLaunches(int k) {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
@@ -106,12 +116,39 @@ public class RocketMinerUnitTest {
         assertEquals(sortedLaunches.subList(0, k), loadedLaunches);
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {12})
+    public void shouldThrowExceptionWhenKIsLargerThanTheLaunchesInMostExpensiveLaunches(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostExpensiveLaunches(k));
+        assertEquals("k should less than the total number of launches", exception.getMessage());
+    }
+
     @ParameterizedTest()
     @ValueSource(strings = "LEO")
     public void shouldReturnTheDominantCountry(String orbit){
         when(dao.loadAll(Launch.class)).thenReturn(launches);
         String country = miner.dominantCountry(orbit);
         assertEquals("US", country);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = "DDD")
+    public void shouldThrowExceptionWhenOrbitIsNotInLaunches(String orbit)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.dominantCountry(orbit));
+        assertEquals("There is no rocket in this orbit", exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"2,2100"})
+    public void shouldThrowExceptionWhenYearIsNotInRangeInHighestRevenueLaunchServiceProviders(int k,int year)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.highestRevenueLaunchServiceProviders(k,year));
+        assertEquals("There is no launch in this year", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -128,6 +165,15 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
+    @CsvSource({"12,2017"})
+    public void shouldThrowExceptionWhenKIsLargerThanTheLaunchesInHighestRevenueLaunchServiceProviders(int k,int year)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.highestRevenueLaunchServiceProviders(k,year));
+        assertEquals("k should less than the total number of launches", exception.getMessage());
+    }
+
+    @ParameterizedTest
     @ValueSource(ints = 1)
     public void shouldReturnTheMostReliableLaunchServiceProviders(int k){
 
@@ -136,6 +182,15 @@ public class RocketMinerUnitTest {
         providers.add(new LaunchServiceProvider("SpaceX", 2002, "US"));
         List<LaunchServiceProvider> loadedProvider = miner.mostReliableLaunchServiceProviders(k);
         assertEquals(providers,loadedProvider);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {12})
+    public void shouldThrowExceptionWhenKIsLargerThanTheReliableLaunchServiceProviders(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostReliableLaunchServiceProviders(k));
+        assertEquals("k should less than the total number of launches", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -166,5 +221,14 @@ public class RocketMinerUnitTest {
         List<Rocket> loadedRockets = miner.mostLaunchedRockets(k);
         assertEquals(k, loadedRockets.size());
         assertEquals(sortedRockets.subList(0, k), loadedRockets);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {11})
+    public void shouldThrowExceptionWhenKIsLargerThanTheLaunchesInMostLaunchedLaunches(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostLaunchedRockets(k));
+        assertEquals("k should less than the total number of launches", exception.getMessage());
     }
 }
