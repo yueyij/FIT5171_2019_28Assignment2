@@ -29,7 +29,7 @@ public class RocketManager extends Entity {
             this.lastName = lastName;
             this.email = email;
             this.password=password;
-            ArrayList<Rocket> rocketList = new ArrayList<Rocket>;
+            ArrayList<Rocket> rocketList = new ArrayList<Rocket>();
         }
         else
             throw new IllegalArgumentException("Value should be valid");
@@ -50,7 +50,7 @@ public class RocketManager extends Entity {
     }
 
     public void addRocket(Rocket rocket){
-        for (i=0; i < rocketList.size(); i++)
+        for (int i=0; i < rocketList.size(); i++)
         {
             if(rocket.getName().equalsIgnoreCase(rocketList.get(i).getName()) == true){
                 throw new IllegalArgumentException("This rocket is already exists.");
@@ -60,10 +60,15 @@ public class RocketManager extends Entity {
         }
     }
 
-    public void deleteRocket(Rocket )
-
-    public String getPassword() {
-        return password;
+    public void deleteRocket(Rocket rocket){
+        for (int i=0; i < rocketList.size(); i++)
+        {
+            if(rocket.getName().equalsIgnoreCase(rocketList.get(i).getName()) == false){
+                throw new IllegalArgumentException("This rocket is not exist.");
+            }
+            else
+                rocketList.remove(rocket);
+        }
     }
 
     public void setPassword(String password) {
@@ -163,22 +168,6 @@ public class RocketManager extends Entity {
         else
             System.out.println("The last name should only contain letters");
         return lastNameValidation;
-    }
-
-    public void setRocket(Rocket rocket) {
-        notBlank(rocket.getName(), "Rocket name cannot be null or empty.");
-        this.rocket = rocket;
-    }
-
-    public void updateRocketName(String newName){
-        Rocket rocket = new Rocket
-    }
-
-    public Rocket getRocket() {return rocket;}
-
-    // match the given password against user's password and return the result
-    public boolean isPasswordMatch(String password) {
-        return this.password.equals(password.trim());
     }
 
     @Override
