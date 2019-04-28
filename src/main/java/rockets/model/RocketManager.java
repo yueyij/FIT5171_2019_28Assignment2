@@ -1,9 +1,9 @@
 package rockets.model;
 
-import com.google.common.collect.Sets;
+import java.util.*;
 
 import java.util.Objects;
-import java.util.Set;
+
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -16,9 +16,9 @@ public class RocketManager extends Entity {
 
     private String password;
 
-    private Set<Rocket> rocket;
+    private ArrayList<Rocket> rocketList;
 
-    public User(String firstName, String lastName, String email, String password) {
+    public RocketManager(String firstName, String lastName, String email, String password) {
         notNull(firstName);
         notNull(lastName);
         notNull(email);
@@ -29,7 +29,7 @@ public class RocketManager extends Entity {
             this.lastName = lastName;
             this.email = email;
             this.password=password;
-            rrockets = Sets.newLinkedHashSet();
+            ArrayList<Rocket> rocketList = new ArrayList<Rocket>;
         }
         else
             throw new IllegalArgumentException("Value should be valid");
@@ -39,6 +39,28 @@ public class RocketManager extends Entity {
     public RocketManager()
     {
     }
+
+    public ArrayList<Rocket> getRocketList() { return rocketList; }
+
+    public void setRocketList(ArrayList<Rocket> rocketList) {
+        if (rocketList.size()==0)
+            throw new NullPointerException("LEO/GTO/OTHER cannot be null");
+        else
+        this.rocketList = rocketList;
+    }
+
+    public void addRocket(Rocket rocket){
+        for (i=0; i < rocketList.size(); i++)
+        {
+            if(rocket.getName().equalsIgnoreCase(rocketList.get(i).getName()) == true){
+                throw new IllegalArgumentException("This rocket is already exists.");
+            }
+            else
+                rocketList.add(rocket);
+        }
+    }
+
+    public void deleteRocket(Rocket )
 
     public String getPassword() {
         return password;
@@ -142,6 +164,17 @@ public class RocketManager extends Entity {
             System.out.println("The last name should only contain letters");
         return lastNameValidation;
     }
+
+    public void setRocket(Rocket rocket) {
+        notBlank(rocket.getName(), "Rocket name cannot be null or empty.");
+        this.rocket = rocket;
+    }
+
+    public void updateRocketName(String newName){
+        Rocket rocket = new Rocket
+    }
+
+    public Rocket getRocket() {return rocket;}
 
     // match the given password against user's password and return the result
     public boolean isPasswordMatch(String password) {

@@ -1,5 +1,7 @@
 package rockets.model;
 
+import com.google.common.collect.Sets;
+
 import java.util.Objects;
 
 import static org.apache.commons.lang3.Validate.notBlank;
@@ -14,7 +16,6 @@ public class User extends Entity {
 
     private String password;
 
-    private Set<Rocket> rocketManaged;
 
     public User(String firstName, String lastName, String email, String password) {
         notNull(firstName);
