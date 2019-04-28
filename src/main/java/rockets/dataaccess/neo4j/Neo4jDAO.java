@@ -6,11 +6,7 @@ import org.neo4j.ogm.cypher.Filters;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.transaction.Transaction;
 import rockets.dataaccess.DAO;
-import rockets.model.Entity;
-import rockets.model.Launch;
-import rockets.model.LaunchServiceProvider;
-import rockets.model.Rocket;
-import rockets.model.User;
+import rockets.model.*;
 
 import java.util.Collection;
 

@@ -42,9 +42,9 @@ public class Neo4jDAOUnitTest {
 
     @BeforeEach
     public void setup() {
-        esa = new LaunchServiceProvider("ESA", 1970, "Europe");
-        spacex = new LaunchServiceProvider("SpaceX", 2002, "USA");
-        rocket = new Rocket("F9", "USA", spacex);
+        esa = new LaunchServiceProvider("ESA", 1970, "AU");
+        spacex = new LaunchServiceProvider("SpaceX", 2002, "US");
+        rocket = new Rocket("F9", "US", spacex);
     }
 
     @Test
@@ -83,15 +83,19 @@ public class Neo4jDAOUnitTest {
     public void shouldNotSaveTwoSameRockets() {
         assertNull(spacex.getId());
 
-        Rocket rocket1 = new Rocket("F9", "USA", spacex);
-        Rocket rocket2 = new Rocket("F9", "USA", spacex);
+        Rocket rocket1 = new Rocket("F9", "US", spacex);
+        Rocket rocket2 = new Rocket("F9", "US", spacex);
         assertEquals(rocket1, rocket2);
+
         dao.createOrUpdate(rocket1);
         assertNotNull(spacex.getId());
+
         Collection<Rocket> rockets = dao.loadAll(Rocket.class);
         assertEquals(1, rockets.size());
+
         Collection<LaunchServiceProvider> manufacturers = dao.loadAll(LaunchServiceProvider.class);
         assertEquals(1, manufacturers.size());
+
         dao.createOrUpdate(rocket2);
         manufacturers = dao.loadAll(LaunchServiceProvider.class);
         assertEquals(1, manufacturers.size());
@@ -102,9 +106,9 @@ public class Neo4jDAOUnitTest {
     @Test
     public void shouldLoadAllRockets() {
         Set<Rocket> rockets = Sets.newHashSet(
-                new Rocket("Ariane4", "France", esa),
-                new Rocket("F5", "USA", spacex),
-                new Rocket("BFR", "USA", spacex)
+                new Rocket("Ariane4", "FR", esa),
+                new Rocket("F5", "US", spacex),
+                new Rocket("BFR", "US", spacex)
         );
 
         for (Rocket r : rockets) {
@@ -165,6 +169,36 @@ public class Neo4jDAOUnitTest {
         dao.delete(rocket);
         assertTrue(dao.loadAll(Rocket.class).isEmpty());
         assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
+    }
+
+    @Test
+    public void shouldDeleteRocketSuccessfully() {
+        dao.createOrUpdate(rocket);
+        assertNotNull(rocket.getId());
+        dao.delete(rocket);
+        assertTrue(dao.loadAll(Rocket.class).isEmpty());
+    }
+
+    @Test
+    public void shouldDeleteLaunchSuccessfully() {
+        Launch launch = new Launch();
+        launch.setLaunchDate(LocalDate.of(2017, 1, 1));
+        launch.setLaunchVehicle(rocket);
+        launch.setLaunchSite("VAFB");
+        launch.setOrbit("LEO");
+        dao.createOrUpdate(launch);
+        assertNotNull(launch.getId());
+        dao.delete(launch);
+        assertTrue(dao.loadAll(Launch.class).isEmpty());
+    }
+
+    @Test
+    public void shouldDeleteLaunchServiceProviderSuccessfully() {
+        LaunchServiceProvider provider = esa;
+        dao.createOrUpdate(provider);
+        assertNotNull(provider.getId());
+        dao.delete(provider);
+        assertTrue(dao.loadAll(LaunchServiceProvider.class).isEmpty());
     }
 
     @AfterEach

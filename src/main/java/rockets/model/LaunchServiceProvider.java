@@ -22,14 +22,15 @@ public class LaunchServiceProvider extends Entity {
         notNull(name);
         notNull(yearFounded);
         notNull(country);
-     if (isValidName(name) && isValidYearFounded(yearFounded) && isValidCountry(country)) {
-         this.name = name;
-         this.yearFounded = yearFounded;
-         this.country = country;
-         rockets = Sets.newLinkedHashSet();
-     }
-     else
-        throw new IllegalArgumentException("Value should be valid");
+
+        if (isValidName(name) && isValidYearFounded(yearFounded) && isValidCountry(country)) {
+            this.name = name;
+            this.yearFounded = yearFounded;
+            this.country = country;
+            rockets = Sets.newLinkedHashSet();
+        }
+        else
+            throw new IllegalArgumentException("Value should be valid");
     }
 
     public String getName() {

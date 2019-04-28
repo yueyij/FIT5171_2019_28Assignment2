@@ -1,5 +1,0 @@
-JessieLaunch,2000,AU
-VekaLaunch,2000,AU
-ULA,1990,US
-SpaceX,2002,US
-ESA,1975,AU

@@ -20,8 +20,6 @@ public class Rocket extends Entity {
 
     private ArrayList<String> mass;
 
-    private ArrayList<LaunchServiceProvider> manufacturerList;
-
     /**
      * All parameters shouldn't be null.
      *
@@ -34,16 +32,8 @@ public class Rocket extends Entity {
         notNull(country);
         notNull(manufacturer);
         this.name = name;
-        manufacturerList = FileManager.readManufacturerInfo("src/main/java/manufacturers.txt");
-        if (isManufacturerValid(manufacturer) == true)
-            this.manufacturer = manufacturer;
-        else
-            throw new IllegalArgumentException("manufacturer should be valid");
-        if (isCountryValid(country) == true )
-            this.country = country;
-        else
-            throw new IllegalArgumentException("Country should be valid");
-
+        this.manufacturer = manufacturer;
+        this.country = country;
     }
 
     public String getName() {
@@ -73,16 +63,10 @@ public class Rocket extends Entity {
         return manufacturer;
     }
 
-    public ArrayList<LaunchServiceProvider> getManufacturerList(){
-        return manufacturerList;
-    }
-
     public void setManufacturer(LaunchServiceProvider manufacturer)
     {
-        if (manufacturer != null && isManufacturerValid(manufacturer) == true)
-            this.manufacturer = manufacturer;
-        else
-            throw new NullPointerException("Manufacturer is not valid");
+        if (manufacturer == null){throw new NullPointerException("Manufacturer cannot be null");}
+        this.manufacturer = manufacturer;
     }
 
     public String getMassToLEO() { return massToLEO; }
@@ -109,30 +93,6 @@ public class Rocket extends Entity {
             this.mass = mass;
 
         }
-    }
-
-    public void setManufacturerList(ArrayList<LaunchServiceProvider> manufacturerList){
-
-        if (manufacturerList.size() ==0 )
-            throw new NullPointerException("Manufacturer List cannot be null");
-        else
-        {
-            this.manufacturerList = manufacturerList;
-        }
-    }
-
-    public boolean isManufacturerValid(LaunchServiceProvider manufacturer)
-    {
-        if (manufacturerList.isEmpty())
-            throw new NullPointerException("Manufacturer List cannot be null");
-        for (LaunchServiceProvider aManufacturer: manufacturerList)
-        {
-            if (aManufacturer.getName().equals(manufacturer.getName()))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean isCountryValid(String country){
