@@ -2,6 +2,7 @@ package rockets.model;
 
 import com.google.common.collect.Sets;
 
+import java.util.Objects;
 import java.util.Set;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -51,6 +52,21 @@ public class RocketManager extends Entity {
             throw new IllegalArgumentException("Password should be 6 to 20 characters and contain at least one upper and lower case");
     }
 
+    public boolean isValidPassword(String password)
+    {
+        boolean passwordValidation = false;
+        if(password.matches("([A-Z]+[a-z]|[a-z]+[A-Z])[A-Za-z0-9]*"))
+        {
+            if (password.length() <= 20 && password.length() >= 6)
+                passwordValidation = true;
+            else
+                System.out.println("The length of password should be between 6 and 20 characters");
+        }
+        else
+            System.out.println("The password shouldn't contain special letters and it should contain at least 1 uppercase letter and 1 lowercase letter");
+        return passwordValidation;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -61,6 +77,22 @@ public class RocketManager extends Entity {
             this.firstName = firstName;
         else
             throw new IllegalArgumentException("FirstName should be letters and not exceed 20");
+    }
+
+
+    public boolean isValidFirstName(String firstName)
+    {
+        boolean firstNameValidation = false;
+        if(firstName.matches("[a-zA-Z]*"))
+        {
+            if (firstName.length() <= 20)
+                firstNameValidation = true;
+            else
+                System.out.println("The length of last name shouldn't exceed 20 letters");
+        }
+        else
+            System.out.println("The last name should only contain letters");
+        return firstNameValidation;
     }
 
     public String getEmail() {
@@ -109,6 +141,33 @@ public class RocketManager extends Entity {
         else
             System.out.println("The last name should only contain letters");
         return lastNameValidation;
+    }
+
+    // match the given password against user's password and return the result
+    public boolean isPasswordMatch(String password) {
+        return this.password.equals(password.trim());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RocketManager rocketManager = (RocketManager) o;
+        return Objects.equals(email, rocketManager.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
+
+    @Override
+    public String toString() {
+        return "Rocket Manager{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 
 
