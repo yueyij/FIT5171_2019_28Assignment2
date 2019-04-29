@@ -44,7 +44,7 @@ public class RocketManager extends Entity {
 
     public void setRocketList(ArrayList<Rocket> rocketList) {
         if (rocketList.size()==0)
-            throw new NullPointerException("LEO/GTO/OTHER cannot be null");
+            throw new NullPointerException("Rocket list cannot be null or empty.");
         else
         this.rocketList = rocketList;
     }
@@ -69,6 +69,10 @@ public class RocketManager extends Entity {
             else
                 rocketList.remove(rocket);
         }
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {

@@ -66,7 +66,12 @@ public class Neo4jDAO implements DAO {
                     .and(new Filter("yearFounded", EQUALS, lsp.getYearFounded()))
                     .and(new Filter("country", EQUALS, lsp.getCountry()));
             collection = session.loadAll(LaunchServiceProvider.class, filters);
-        }
+        } else if (clazz.equals(RocketManager.class)) {
+            RocketManager manager = (RocketManager) entity;
+            filters.add(new Filter("email", EQUALS, manager.getEmail()));
+            collection = session.loadAll(RocketManager.class, filters);
+         }
+
         if (!collection.isEmpty()) {
             existingEntity = collection.iterator().next();
         }
